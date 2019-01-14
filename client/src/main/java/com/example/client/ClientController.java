@@ -1,5 +1,6 @@
 package com.example.client;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -36,8 +38,15 @@ public class ClientController {
     }
 
     @GetMapping("/quotes")
+    @HystrixCommand(fallbackMethod = "quoteFallback")
     public List<Quote> quotes() throws Exception {
         return restTemplate.getForObject("//server/quotes", QuoteList.class);
+    }
+
+    public List<Quote> quoteFallback() {
+        Quote sample = new Quote();
+        sample.setQuote("When our downstream service has issues - here is a sample quote for you = Chiz!");
+        return Arrays.asList(sample);
     }
 
 }
