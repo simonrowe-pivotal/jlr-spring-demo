@@ -1,0 +1,12 @@
+---
+applications:
+  - name: server
+    random-route: true
+    memory: 1G
+    path: ./target/server-0.0.1-SNAPSHOT.jar
+    services:
+      - amqp
+      - config-server
+      - database
+      - service-registry
+
