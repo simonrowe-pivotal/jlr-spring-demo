@@ -18,7 +18,7 @@ Here is two web spring boot applications:
 
 The Client application contains 3 endpoints:     
 * ``` /quoteHTTP``` a POST handler for saving a quote. Client communicates with Server via HTTPS, using a @Loadbalanced RestTemplate.
-* ``` /quoteQuoteMessaging``` a POST handler for saving a quote. Client communicates with Server via a message channel.
+* ``` /quoteMessaging``` a POST handler for saving a quote. Client communicates with Server via a message channel.
 * ``` /quotes``` a GET handler for retrieving all quotes saved in the system.
 
 ### Running these examples on PCF:
@@ -34,5 +34,11 @@ Firstly create the following services
 3. run ```cf push -f client/manifest.yml``` - to deploy the client microservice to PCF
 
 
-### To test the app using curl
-1. 
+### Manually test the app using curl
+Set the environment variablle CLIENT_URL to the base url of the client microservice. E.g. ```export CLIENT_URL=https://client-excellent-grysbok.cfapps.io/```
+
+1. Call the /quotes endpoint on the client microservice: ```curl -XGET $CLIENT_URL/quotes -i``` - You should not see any quotes.
+2. Call the /quoteHTTP endpoint on the client microservice to persist a new quote using REST communication between client and server. ```curl -XPOST $CLIENT_URL/quoteHttp -H 'Content-Type: application/json' -d'{"id": null, "quote": "Quote By Http" }' -i ```. If you repeat step 1 again, you should see this this quote.
+3. Call the /quoteMessaging endpoint on the client microservice to persist a new quote using Messaging. ```curl -XPOST $CLIENT_URL/quoteMessaging -H 'Content-Type: application/json' -d'{"id": null, "quote": "Quote By Messaging" }' -i ```. If you repeat step 1 again, you should see both quotes.
+
+
