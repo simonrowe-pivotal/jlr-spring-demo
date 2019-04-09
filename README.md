@@ -1,4 +1,4 @@
-# jlr-spring-demo
+# spring-cloud-demo
 Adhoc Demo's from Cloud Native Workshop.
 
 ![](img/architecture.png)
